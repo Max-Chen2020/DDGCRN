@@ -14,7 +14,7 @@ def load_st_dataset(dataset):
         data_path = os.path.join('./data/PeMS07/PEMS07.npz')
         data = np.load(data_path)['data'][:, :, 0]  #onley the first dimension, traffic flow data
     elif dataset == 'PEMSD8':
-        data_path = os.path.join('./data/PeMS08/PEMS08.npz')
+        data_path = os.path.join('./data/PEMS08/PEMS08.npz')
         data = np.load(data_path)['data'][:, :, 0]  #onley the first dimension, traffic flow data
     elif dataset == 'PEMSD7(L)':
         data_path = os.path.join('./data/PEMS07(L)/PEMS07L.npz')
