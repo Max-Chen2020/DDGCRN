@@ -25,9 +25,9 @@ def load_st_dataset(dataset):
     elif dataset == 'METR-LA':
         data_path = os.path.join('./data/METR-LA/METR.h5')
         data = pd.read_hdf(data_path)
-    elif dataset == 'BJ':
-        data_path = os.path.join('./data/BJ/BJ500.csv')
-        data = np.array(pd.read_csv(data_path, header=0, index_col=0))
+    elif dataset == 'PEMS':
+        data_path = os.path.join('./data/speed_pems.h5')
+        data = pd.read_hdf(data_path)
     else:
         raise ValueError
     if len(data.shape) == 2:
@@ -35,6 +35,3 @@ def load_st_dataset(dataset):
     print('Load %s Dataset shaped: ' % dataset, data.shape, data.max(), data.min(), data.mean(), np.median(data))
     return data
 
-#
-# data_path = os.path.join('../data/PeMS07/PEMS07.npz')
-# data = np.load(data_path)['data'][:, :, 0]  # onley the first dimension, traffic flow data
