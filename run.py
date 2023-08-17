@@ -40,7 +40,7 @@ def masked_mae_loss(scaler, mask_value):
 
 #parser
 args = argparse.ArgumentParser(description='arguments')
-args.add_argument('--dataset', default='PEMSD4', type=str)
+args.add_argument('--dataset', default='PEMS', type=str)
 args.add_argument('--mode', default='train', type=str)
 args.add_argument('--device', default='cuda:0', type=str, help='indices of GPUs')
 args.add_argument('--debug', default='False', type=eval)
@@ -144,7 +144,7 @@ if args.lr_decay:
     lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer,
                                                         milestones=lr_decay_steps,
                                                         gamma=args.lr_decay_rate)
-    #lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=64)
+
 
 #config log path
 current_time = datetime.now().strftime('%Y%m%d%H%M%S')
