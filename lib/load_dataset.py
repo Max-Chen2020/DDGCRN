@@ -4,30 +4,17 @@ import pandas as pd
 
 def load_st_dataset(dataset):
     #output B, N, D
-    if dataset == 'PEMSD3':
-        data_path = os.path.join('./data/PeMS03/PEMS03.npz')
-        data = np.load(data_path)['data'][:, :, 0]  #onley the first dimension, traffic flow data
-    elif dataset == 'PEMSD4':
-        data_path = os.path.join('./data/PeMS04/PEMS04.npz')
-        data = np.load(data_path)['data'][:, :, 0]  #onley the first dimension, traffic flow data
-    elif dataset == 'PEMSD7':
-        data_path = os.path.join('./data/PeMS07/PEMS07.npz')
-        data = np.load(data_path)['data'][:, :, 0]  #onley the first dimension, traffic flow data
-    elif dataset == 'PEMSD8':
-        data_path = os.path.join('./data/PEMS08/PEMS08.npz')
-        data = np.load(data_path)['data'][:, :, 0]  #onley the first dimension, traffic flow data
-    elif dataset == 'PEMSD7(L)':
-        data_path = os.path.join('./data/PEMS07(L)/PEMS07L.npz')
-        data = np.load(data_path)['data'][:, :, 0]  #onley the first dimension, traffic flow data
-    elif dataset == 'PEMSD7(M)':
+    if dataset == 'PEMSD7(M)':
         data_path = os.path.join('./data/PEMS07(M)/V_228.csv')
-        data = np.array(pd.read_csv(data_path,header=None))  #onley the first dimension, traffic flow data
+        data = np.array(pd.read_csv(data_path,header=None)) 
     elif dataset == 'METR-LA':
         data_path = os.path.join('./data/METR-LA/METR.h5')
         data = pd.read_hdf(data_path)
     elif dataset == 'PEMS':
-        data_path = os.path.join('./data/speed_pems.h5')
-        data = pd.read_hdf(data_path)
+        data_path = os.path.join('./data/pems.h5')
+        speed = pd.read_hdf(data_path, key = 'speed', mode='r')
+        flow = pd.read_hdf(data_path, key='flow', mode='r')
+        data = np.stack((speed, flow), axis=-1)
     else:
         raise ValueError
     if len(data.shape) == 2:
