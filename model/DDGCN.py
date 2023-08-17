@@ -36,41 +36,6 @@ x2=x_g[:,0,:,:]+x_g[:,1,:,:]
 print(np.allclose(x1.numpy(), x2.numpy()))
 '''
 
-'''
-def get_laplacian(graph, I, normalize=True):
-    """
-    return the laplacian of the graph.
-
-    :param graph: the graph structure without self loop, [N, N].
-    :param normalize: whether to used the normalized laplacian.
-    :return: graph laplacian.
-    """
-    if normalize:
-        D = torch.diag_embed(torch.sum(graph, dim=-1) ** (-1 / 2))
-        L = I - torch.matmul(torch.matmul(D, graph), D)
-    else:
-        D = torch.diag(torch.sum(graph, dim=-1))
-        L = D - graph
-    return L
-
-supports1 = torch.eye(10).cuda()
-
-D1 = torch.ones([10,1])
-D2 = torch.ones([1,10])
-x = F.relu(torch.randn([10,10,10]).cuda())
-x1 = torch.sum(x, dim=-1) ** (-1 / 2)
-x2 = torch.diag_embed(x1)
-
-y = get_laplacian(x, supports1)
-
-#D = torch.einsum('nm,mc->nc', D1, D2)
-print(y)
-
-'''
-
-
-
-
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
