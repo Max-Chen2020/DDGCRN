@@ -65,23 +65,23 @@ class DDGCRN(nn.Module):
         self.encoder2 = DGCRM(args.num_nodes, args.input_dim, args.rnn_units, args.cheb_k,
                               args.embed_dim, args.num_layers)
         #predictor
-        self.end_conv1 = nn.Conv2d(1, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
-        self.end_conv2 = nn.Conv2d(1, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
-        self.end_conv3 = nn.Conv2d(1, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
+        self.end_conv1 = nn.Conv2d(args.input_dim, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
+        self.end_conv2 = nn.Conv2d(args.input_dim, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
+        self.end_conv3 = nn.Conv2d(args.input_dim, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
     def forward(self, source, i=2):
         #source: B, T_1, N, D
         #target: B, T_2, N, D
         
         node_embedding1 = self.node_embeddings1
         if self.use_D:
-            t_i_d_data   = source[..., 1]
+            t_i_d_data   = source[..., 2]
 
             # T_i_D_emb = self.T_i_D_emb[(t_i_d_data[:, -1, :] * 288).type(torch.LongTensor)]
             T_i_D_emb = self.T_i_D_emb[(t_i_d_data * 288).type(torch.LongTensor)]
             node_embedding1 = torch.mul(node_embedding1, T_i_D_emb)
 
         if self.use_W:
-            d_i_w_data   = source[..., 2]
+            d_i_w_data   = source[..., 3]
             # D_i_W_emb = self.D_i_W_emb[(d_i_w_data[:, -1, :]).type(torch.LongTensor)]
             D_i_W_emb = self.D_i_W_emb[(d_i_w_data).type(torch.LongTensor)]
             node_embedding1 = torch.mul(node_embedding1, D_i_W_emb)
@@ -108,19 +108,19 @@ class DDGCRN(nn.Module):
             init_state1 = self.encoder1.init_hidden(source.shape[0])   #[2,64,307,64] 前面是2是因为有两层GRU
             output, _ = self.encoder1(source, init_state1, node_embeddings)      #B, T, N, hidden
             # output = output[:, -1:, :, :]                                   #B, 1, N, hidden
-            output = self.dropout1(output[:, -1:, :, :])
+            output = self.dropout1(output[:, -2:, :, :])
 
             #CNN based predictor
             output1 = self.end_conv1(output)                         #B, T*C, N, 1
 
-            source1 = self.end_conv2(output)
+            source1 = self.end_conv2(output).reshape(source.shape)
 
             source2 = source -source1
 
             init_state2 = self.encoder2.init_hidden(source2.shape[0])   #[2,64,307,64] 前面是2是因为有两层GRU
             output2, _ = self.encoder2(source2, init_state2, node_embeddings)      #B, T, N, hidden
             # output2 = output2[:, -1:, :, :]                                   #B, 1, N, hidden
-            output2 = self.dropout2(output2[:, -1:, :, :])
+            output2 = self.dropout2(output2[:, -2:, :, :])
 
             # source2 = self.end_conv4(output2)
 
