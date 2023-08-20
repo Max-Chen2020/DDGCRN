@@ -111,7 +111,7 @@ class DDGCRN(nn.Module):
             output = self.dropout1(output[:, -2:, :, :])
 
             #CNN based predictor
-            output1 = self.end_conv1(output)                         #B, T*C, N, 1
+            output1 = self.end_conv1(output).reshape(source.shape)                         #B, T*C, N, 1
 
             source1 = self.end_conv2(output).reshape(source.shape)
 
@@ -124,7 +124,7 @@ class DDGCRN(nn.Module):
 
             # source2 = self.end_conv4(output2)
 
-            output2 = self.end_conv3(output2)
+            output2 = self.end_conv3(output2).reshape(source.shape)
 
             return output1 + output2
 
