@@ -114,6 +114,7 @@ class DDGCRN(nn.Module):
             output1 = self.end_conv1(output)                        #B, T*C, N, 1
 
             source1 = self.end_conv2(output)
+            source1 = source1[:, :12, :, :]
 
             source2 = source -source1
 
