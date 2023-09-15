@@ -57,7 +57,7 @@ class DDGCRN(nn.Module):
         self.default_graph = args.default_graph
         self.node_embeddings1 = nn.Parameter(torch.randn(self.num_node, args.embed_dim), requires_grad=True)
         self.node_embeddings2 = nn.Parameter(torch.randn(self.num_node, args.embed_dim), requires_grad=True)
-        self.T_i_D_emb = nn.Parameter(torch.empty(288, args.embed_dim))
+        self.T_i_D_emb = nn.Parameter(torch.empty(96, args.embed_dim))
         self.D_i_W_emb = nn.Parameter(torch.empty(7, args.embed_dim))
 
         self.encoder1 = DGCRM(args.num_nodes, args.input_dim, args.rnn_units, args.cheb_k,
