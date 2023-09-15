@@ -76,8 +76,7 @@ class DDGCRN(nn.Module):
         if self.use_D:
             t_i_d_data   = source[..., 1]
 
-            # T_i_D_emb = self.T_i_D_emb[(t_i_d_data[:, -1, :] * 288).type(torch.LongTensor)]
-            T_i_D_emb = self.T_i_D_emb[(t_i_d_data * 288).type(torch.LongTensor)]
+            T_i_D_emb = self.T_i_D_emb[(t_i_d_data * 96).type(torch.LongTensor)]
             node_embedding1 = torch.mul(node_embedding1, T_i_D_emb)
 
         if self.use_W:
