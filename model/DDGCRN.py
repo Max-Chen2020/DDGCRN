@@ -90,7 +90,7 @@ class DDGCRN(nn.Module):
 
         node_embeddings=[node_embedding1,self.node_embeddings1]
 
-        source = source[..., :args.input_dim]
+        source = source[..., :self.input_dim]
 
         if i == 1:
             init_state1 = self.encoder1.init_hidden(source.shape[0])  # [2,64,307,64] 前面是2是因为有两层GRU
