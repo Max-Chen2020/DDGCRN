@@ -74,13 +74,13 @@ class DDGCRN(nn.Module):
         
         node_embedding1 = self.node_embeddings1
         if self.use_D:
-            t_i_d_data   = source[..., 1]
+            t_i_d_data   = source[..., 2]
 
             T_i_D_emb = self.T_i_D_emb[(t_i_d_data * 96).type(torch.LongTensor)]
             node_embedding1 = torch.mul(node_embedding1, T_i_D_emb)
 
         if self.use_W:
-            d_i_w_data   = source[..., 2]
+            d_i_w_data   = source[..., 3]
             # D_i_W_emb = self.D_i_W_emb[(d_i_w_data[:, -1, :]).type(torch.LongTensor)]
             D_i_W_emb = self.D_i_W_emb[(d_i_w_data).type(torch.LongTensor)]
             node_embedding1 = torch.mul(node_embedding1, D_i_W_emb)
@@ -90,7 +90,7 @@ class DDGCRN(nn.Module):
 
         node_embeddings=[node_embedding1,self.node_embeddings1]
 
-        source = source[..., 0].unsqueeze(-1)
+        source = source[..., :args.input_dim]
 
         if i == 1:
             init_state1 = self.encoder1.init_hidden(source.shape[0])  # [2,64,307,64] 前面是2是因为有两层GRU
@@ -113,6 +113,7 @@ class DDGCRN(nn.Module):
             output1 = self.end_conv1(output)                         #B, T*C, N, 1
 
             source1 = self.end_conv2(output)
+            source = source[:, :12, :, :]
 
             source2 = source -source1
 
