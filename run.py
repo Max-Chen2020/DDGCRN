@@ -32,6 +32,19 @@ def masked_mae_loss(scaler, mask_value):
         return mae
     return loss
 
+def phy_loss(scaler, alpha, p, m, mask_value):
+    def loss(preds, labels):
+        if scaler:
+            preds = scaler.inverse_transform(preds)
+            labels = scaler.inverse_transform(labels)
+        mae = torch.nn.L1Loss()
+        flow = torch.mean(preds[..., 0], dim = 1)
+        speed = torch.mean(preds[..., 1], dim = 1)
+        phy = torch.abs(torch.pow(flow, 3) * p[0] + torch.square(flow, 2) * p[1] + flow * p[2] + p[3] - speed) - m
+        phy = torch.sum(torch.where(phy <= 0, 0, phy))
+        return (1 - alpha) * mae(preds[..., 0], labels[..., 0]) + alpha * phy
+    return loss
+
 # Mode = 'train'
 # DEBUG = 'True'
 # DATASET = 'PEMSD3'      #PEMSD4 or PEMSD8
