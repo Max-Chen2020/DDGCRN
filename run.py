@@ -100,7 +100,7 @@ args.add_argument('--log_step', default=config['log']['log_step'], type=int)
 args.add_argument('--plot', default=config['log']['plot'], type=eval)
 args = args.parse_args()
 
-print(args)
+# print(args)
 
 # init_seed(args.seed)
 if torch.cuda.is_available():
