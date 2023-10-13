@@ -65,9 +65,9 @@ class DDGCRN(nn.Module):
         self.encoder2 = DGCRM(args.num_nodes, args.input_dim, args.rnn_units, args.cheb_k,
                               args.embed_dim, args.num_layers)
         #predictor
-        self.end_conv1 = nn.Conv2d(1, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
-        self.end_conv2 = nn.Conv2d(1, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
-        self.end_conv3 = nn.Conv2d(1, args.horizon * self.output_dim, kernel_size=(1, self.hidden_dim), bias=True)
+        self.end_conv1 = nn.Conv2d(1, args.horizon, kernel_size=(self.output_dim, self.hidden_dim), bias=True)
+        self.end_conv2 = nn.Conv2d(1, args.horizon, kernel_size=(self.output_dim, self.hidden_dim), bias=True)
+        self.end_conv3 = nn.Conv2d(1, args.horizon, kernel_size=(self.output_dim, self.hidden_dim), bias=True)
     def forward(self, source, i=2):
         #source: B, T_1, N, D
         #target: B, T_2, N, D
@@ -114,9 +114,9 @@ class DDGCRN(nn.Module):
             output1 = self.end_conv1(output)                        #B, T*C, N, 1
 
             source1 = self.end_conv2(output)
-            source1 = source1[:, :12, :, :]
+            # source1 = source1[:, :12, :, :]
 
-            source2 = source -source1
+            source2 = source - source1
 
             init_state2 = self.encoder2.init_hidden(source2.shape[0])   #[2,64,307,64] 前面是2是因为有两层GRU
             output2, _ = self.encoder2(source2, init_state2, node_embeddings)      #B, T, N, hidden
