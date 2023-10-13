@@ -65,9 +65,9 @@ class DDGCRN(nn.Module):
         self.encoder2 = DGCRM(args.num_nodes, args.input_dim, args.rnn_units, args.cheb_k,
                               args.embed_dim, args.num_layers)
         #predictor
-        self.end_conv1 = nn.Conv2d(1, args.horizon, kernel_size=(self.output_dim, self.hidden_dim), bias=True)
-        self.end_conv2 = nn.Conv2d(1, args.horizon, kernel_size=(self.output_dim, self.hidden_dim), bias=True)
-        self.end_conv3 = nn.Conv2d(1, args.horizon, kernel_size=(self.output_dim, self.hidden_dim), bias=True)
+        self.end_conv1 = nn.Conv2d(1, args.horizon, kernel_size=(1, self.hidden_dim), bias=True)
+        self.end_conv2 = nn.Conv2d(1, args.horizon, kernel_size=(1, self.hidden_dim), bias=True)
+        self.end_conv3 = nn.Conv2d(1, args.horizon, kernel_size=(1, self.hidden_dim), bias=True)
     def forward(self, source, i=2):
         #source: B, T_1, N, D
         #target: B, T_2, N, D
